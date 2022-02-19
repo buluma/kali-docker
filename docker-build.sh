@@ -9,7 +9,7 @@ TARBALL=$IMAGE-$ARCHITECTURE.tar.xz
 VERSIONFILE=$IMAGE-$ARCHITECTURE.release.version
 
 CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE:-"kalilinux"}
-PROJECT_URL=${CI_PROJECT_URL:-"https://gitlab.com/kalilinux/build-scripts/kali-docker"}
+PROJECT_URL=${CI_PROJECT_URL:-"https://gitlab.com/buluma/kali-docker"}
 BUILD_DATE=${CI_JOB_STARTED_AT:-$(date -u +"%Y-%m-%dT%H:%M:%SZ")}
 BUILD_VERSION=$(date -u +"%Y.%m.%d")
 VCS_REF=${CI_COMMIT_SHORT_SHA:-$(git rev-parse --short HEAD)}

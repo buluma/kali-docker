@@ -29,7 +29,7 @@ build-rootfs:
             | gzip -dc | grep ^Filename: | grep kali-archive-keyring | head -n 1 | awk '{print $2}')
         KEYRING_PKG_URL="https://http.kali.org/kali/$KEYRING_PKG_URL"
         wget -nv "$KEYRING_PKG_URL"
-        sudo dpkg -i kali-archive-keyring_*_all.deb
+        dpkg -i kali-archive-keyring_*_all.deb
         rm kali-archive-keyring_*_all.deb
         # Enable support for additional executable binary formats
         update-binfmts --enable
@@ -103,6 +103,8 @@ test-docker-images:
         - docker:dind
     dependencies:
         - build-docker-images
+    before_script:
+        - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
     script: |
         set -e
         apk update
