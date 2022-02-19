@@ -58,10 +58,10 @@ jobs:
               | gzip -dc | grep ^Filename: | grep kali-archive-keyring | head -n 1 | awk '{print $2}')
           KEYRING_PKG_URL="https://http.kali.org/kali/$KEYRING_PKG_URL"
           wget -nv "$KEYRING_PKG_URL"
-          dpkg -i kali-archive-keyring_*_all.deb
-          rm kali-archive-keyring_*_all.deb
+          sudo dpkg -i kali-archive-keyring_*_all.deb
+          sudo rm kali-archive-keyring_*_all.deb
           # Enable support for additional executable binary formats
-          update-binfmts --enable
+          sudo update-binfmts --enable
           # Take a look at the surroundings
           echo "================================"
           PS4=====\ $\ ; set -x
