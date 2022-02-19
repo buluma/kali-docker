@@ -1,0 +1,99 @@
+name: Docker CI
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  schedule:
+    - cron: '43 15 * * *'
+  push:
+    branches: [ master ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Install the cosign tool except on PR
+      # https://github.com/sigstore/cosign-installer
+      - name: Install cosign
+        if: github.event_name != 'pull_request'
+        uses: sigstore/cosign-installer@1e95c1de343b5b0c23352d6417ee3e48d5bcd422
+        with:
+          cosign-release: 'v1.4.0'
+        
+      # Test Script
+      - name: Test Script
+        run: |
+          set -e
+          # Install tools
+          sudo apt-get -y update
+          sudo apt-get -y install debootstrap pixz qemu-user-static wget
+          # Install Kali archive keyring
+          KEYRING_PKG_URL=$(wget -nv -O - \
+              https://http.kali.org/kali/dists/kali-rolling/main/binary-amd64/Packages.gz \
+              | gzip -dc | grep ^Filename: | grep kali-archive-keyring | head -n 1 | awk '{print $2}')
+          KEYRING_PKG_URL="https://http.kali.org/kali/$KEYRING_PKG_URL"
+          wget -nv "$KEYRING_PKG_URL"
+          dpkg -i kali-archive-keyring_*_all.deb
+          rm kali-archive-keyring_*_all.deb
+          # Enable support for additional executable binary formats
+          update-binfmts --enable
+          # Take a look at the surroundings
+          echo "================================"
+          PS4=====\ $\ ; set -x
+          uname -a
+          cat /proc/cmdline
+          sh -c "cut -d ' ' -f 1 /proc/modules | sort -u"
+          ls -l /dev
+          cat /proc/mounts
+          zgrep BINFMT_MISC /proc/config.gz
+          sh -c "update-binfmts --display | sed -n 's/:$//p'"
+          set +x
+          echo "================================"
+          # Test architectures right away
+          echo "Arch test:"
+          for arch in $ARCHS; do
+              echo -n "* $arch: " && /usr/lib/arch-test/$arch
+          done
+          # Since GitLab migrated to Google Container-Optimized OS & Docker 19.03.15
+          # in August 2021, /builds is mounted with the option nodev, and it breaks
+          # debootstrap. Workaround by using another location.
+          # References:
+          # * https://gitlab.com/kalilinux/build-scripts/kali-docker/-/issues/40
+          # * https://gitlab.com/gitlab-com/gl-infra/production/-/issues/5184
+          mkdir /work && cp build-rootfs.sh /work && cd /work
+          # Build the various rootfs
+          for image in $BASE_IMAGES; do
+              for arch in $ARCHS; do
+                  echo "========================================"
+                  echo "Building rootfs $image/$arch"
+                  echo "========================================"
+                  ./build-rootfs.sh "$image" "$arch"
+              done
+          done
+          # Bring artifacts back in CI_PROJECT_DIR (see above)
+          cp -v *.tar.xz *.release.version $CI_PROJECT_DIR
