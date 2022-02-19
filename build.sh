@@ -21,7 +21,8 @@ BASE_IMAGES="kali-rolling kali-dev kali-last-release"
 EXTRA_IMAGES="kali-experimental kali-bleeding-edge kali"
 
 [ "$IMAGES" == all ] && IMAGES="$BASE_IMAGES $EXTRA_IMAGES"
-[ "$ARCHS" == all ] && ARCHS="amd64 arm64 armhf"
+# [ "$ARCHS" == all ] && ARCHS="amd64 arm64 armhf"  # ToDo
+[ "$ARCHS" == all ] && ARCHS="amd64 armhf"
 
 # ensure base images get built first, as extra images depend on it
 for image in $(printf "%s\n" $BASE_IMAGES | tac); do

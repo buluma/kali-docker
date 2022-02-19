@@ -12,7 +12,7 @@ ARCHITECTURE=$2
 
 case "$ARCHITECTURE" in
     amd64) platform="linux/amd64"; machine="x86_64" ;;
-    arm64) platform="linux/arm64"; machine="aarch64" ;;
+    # arm64) platform="linux/arm64"; machine="aarch64" ;;  # ToDo
     armhf) platform="linux/arm/7"; machine="armv7l" ;;
 esac
 

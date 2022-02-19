@@ -10,7 +10,7 @@ CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE:-"kalilinux"}
 
 case "$ARCHITECTURE" in
     amd64) platform="linux/amd64" ;;
-    arm64) platform="linux/arm64" ;;
+    # arm64) platform="linux/arm64" ;;  # ToDO
     armhf) platform="linux/arm/7" ;;
 esac
 

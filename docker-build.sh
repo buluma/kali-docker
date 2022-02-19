@@ -16,7 +16,7 @@ VCS_REF=${CI_COMMIT_SHORT_SHA:-$(git rev-parse --short HEAD)}
 
 case "$ARCHITECTURE" in
     amd64) platform="linux/amd64" ;;
-    arm64) platform="linux/arm64" ;;
+    # arm64) platform="linux/arm64" ;;  # ToDo
     armhf) platform="linux/arm/7" ;;
 esac
 
