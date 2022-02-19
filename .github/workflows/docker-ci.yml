@@ -50,8 +50,8 @@ jobs:
         run: |
           set -e
           # Install tools
-          apt-get -y update
-          apt-get -y install debootstrap pixz qemu-user-static wget
+          sudo apt-get -y update
+          sudo apt-get -y install debootstrap pixz qemu-user-static wget
           # Install Kali archive keyring
           KEYRING_PKG_URL=$(wget -nv -O - \
               https://http.kali.org/kali/dists/kali-rolling/main/binary-amd64/Packages.gz \
