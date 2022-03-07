@@ -67,13 +67,13 @@ jobs:
           echo "================================"
           PS4=====\ $\ ; set -x
           uname -a
-          cat /proc/cmdline
-          sh -c "cut -d ' ' -f 1 /proc/modules | sort -u"
-          ls -l /dev
-          cat /proc/mounts
+          sudo cat /proc/cmdline
+          sudo sh -c "cut -d ' ' -f 1 /proc/modules | sort -u"
+          sudo ls -l /dev
+          sudo cat /proc/mounts
           # zgrep BINFMT_MISC /proc/config.gz
-          sh -c "update-binfmts --display | sed -n 's/:$//p'"
-          set +x
+          sudo sh -c "update-binfmts --display | sed -n 's/:$//p'"
+          sudo set +x
           echo "================================"
           # Test architectures right away
           echo "Arch test:"
