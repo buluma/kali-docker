@@ -73,7 +73,7 @@ jobs:
           sudo cat /proc/mounts
           # zgrep BINFMT_MISC /proc/config.gz
           sudo sh -c "update-binfmts --display | sed -n 's/:$//p'"
-          sudo set +x
+          set +x
           echo "================================"
           # Test architectures right away
           echo "Arch test:"
