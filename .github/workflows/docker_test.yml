@@ -1,0 +1,80 @@
+name: Docker Test
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  schedule:
+    - cron: '43 15 * * *'
+  push:
+    branches: [ master ]
+    # Publish semver tags as releases.
+    tags: [ 'v*.*.*' ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      # This is used to complete the identity challenge
+      # with sigstore/fulcio when running outside of PRs.
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # Install the cosign tool except on PR
+      # https://github.com/sigstore/cosign-installer
+      - name: Install cosign
+        if: github.event_name != 'pull_request'
+        uses: sigstore/cosign-installer@1e95c1de343b5b0c23352d6417ee3e48d5bcd422
+        with:
+          cosign-release: 'v1.4.0'
+        
+      # Test Script
+      - name: Test Script
+        run: |
+          set -e
+          # Install tools
+          sudo apt-get -y update
+          sudo apt-get -y install debootstrap pixz qemu-user-static wget
+          # Install Kali archive keyring
+          KEYRING_PKG_URL=$(wget -nv -O - \
+              https://http.kali.org/kali/dists/kali-rolling/main/binary-amd64/Packages.gz \
+              | gzip -dc | grep ^Filename: | grep kali-archive-keyring | head -n 1 | awk '{print $2}')
+          KEYRING_PKG_URL="https://http.kali.org/kali/$KEYRING_PKG_URL"
+          wget -nv "$KEYRING_PKG_URL"
+          sudo dpkg -i kali-archive-keyring_*_all.deb
+          sudo rm kali-archive-keyring_*_all.deb
+          # Enable support for additional executable binary formats
+          sudo update-binfmts --enable
+          # Take a look at the surroundings
+          echo "================================"
+          PS4=====\ $\ ; set -x
+          uname -a
+          sudo cat /proc/cmdline
+          sudo sh -c "cut -d ' ' -f 1 /proc/modules | sort -u"
+          sudo ls -l /dev
+          sudo cat /proc/mounts
+          # zgrep BINFMT_MISC /proc/config.gz
+          sudo sh -c "update-binfmts --display | sed -n 's/:$//p'"
+          set +x
+          echo "================================"
+          # Test architectures right away
+          echo "Arch testing:"
+          ./initialize.sh
