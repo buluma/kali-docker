@@ -78,7 +78,7 @@ jobs:
           # Test architectures right away
           echo "Arch testing:"
           for arch in $ARCHS; do
-              echo -n "* $arch: " && /usr/lib/arch-test/$arch
+              sudo echo -n "* $arch: " && /usr/lib/arch-test/$arch
           done
           # Since GitLab migrated to Google Container-Optimized OS & Docker 19.03.15
           # in August 2021, /builds is mounted with the option nodev, and it breaks
