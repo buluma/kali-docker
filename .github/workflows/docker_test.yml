@@ -75,6 +75,17 @@ jobs:
           sudo sh -c "update-binfmts --display | sed -n 's/:$//p'"
           set +x
           echo "================================"
-          # Test architectures right away
-          echo "Arch testing:"
+          # Test initialize
+          echo "Init testing:"
           ./initialize.sh
+          echo "================================"
+          # Test Build
+          echo "Build testing:"
+          ./build.sh
+          echo "================================"
+          # Test Docker Build Extra
+          echo "Build testing:"
+          ./docker-build-extra.sh
+          # Test Build Rootfs
+          echo "Build testing:"
+          ./build-rootfs.sh
