@@ -71,7 +71,7 @@ jobs:
           sudo sh -c "cut -d ' ' -f 1 /proc/modules | sort -u"
           sudo ls -l /dev
           sudo cat /proc/mounts
-          # zgrep BINFMT_MISC /proc/config.gz
+          zgrep BINFMT_MISC /proc/config.gz
           sudo sh -c "update-binfmts --display | sed -n 's/:$//p'"
           set +x
           echo "================================"
