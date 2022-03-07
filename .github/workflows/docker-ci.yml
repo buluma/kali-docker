@@ -93,7 +93,7 @@ jobs:
                   echo "========================================"
                   echo "Building rootfs $image/$arch"
                   echo "========================================"
-                  sudo ./build-rootfs.sh "$image" "$arch"
+                  ./build-rootfs.sh "$image" "$arch"
               done
           done
           # Bring artifacts back in CI_PROJECT_DIR (see above)
