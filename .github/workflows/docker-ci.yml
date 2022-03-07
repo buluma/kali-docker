@@ -86,7 +86,7 @@ jobs:
           # References:
           # * https://gitlab.com/kalilinux/build-scripts/kali-docker/-/issues/40
           # * https://gitlab.com/gitlab-com/gl-infra/production/-/issues/5184
-          mkdir /work && cp build-rootfs.sh /work && cd /work
+          sudo mkdir /work && cp build-rootfs.sh /work && cd /work
           # Build the various rootfs
           for image in $BASE_IMAGES; do
               for arch in $ARCHS; do
@@ -97,4 +97,4 @@ jobs:
               done
           done
           # Bring artifacts back in CI_PROJECT_DIR (see above)
-          cp -v *.tar.xz *.release.version $CI_PROJECT_DIR
+          sudo cp -v *.tar.xz *.release.version $CI_PROJECT_DIR
