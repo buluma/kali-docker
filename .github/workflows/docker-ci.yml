@@ -76,7 +76,7 @@ jobs:
           set +x
           echo "================================"
           # Test architectures right away
-          echo "Arch test:"
+          echo "Arch testing:"
           for arch in $ARCHS; do
               echo -n "* $arch: " && /usr/lib/arch-test/$arch
           done
