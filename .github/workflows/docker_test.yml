@@ -87,5 +87,5 @@ jobs:
           echo "Build testing:"
           ./docker-build-extra.sh
           # Test Build Rootfs
-          echo "Build testing:"
-          ./build-rootfs.sh
+          # echo "Build testing:"
+          # ./build-rootfs.sh

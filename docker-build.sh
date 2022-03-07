@@ -6,7 +6,7 @@ DISTRO=$1
 TARBALL=$1.tar.xz
 CHROOT=rootfs-$1
 
-CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE:-kalilinux}
+CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE:-buluma}
 BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 BUILD_VERSION=$(date -u +"%Y-%m-%d")
 VCS_URL=$(git config --get remote.origin.url)
